@@ -1,0 +1,35 @@
+# Instructions for pushing your portfolio to GitHub (shaownak.github.io)
+
+## Step 1: Initialize a Git Repository
+Open a terminal or command prompt in your project directory (g:\Django Project\Myself) and run:
+git init
+
+## Step 2: Add all files to the staging area
+git add .
+
+## Step 3: Commit the changes
+git commit -m "Initial commit of my portfolio website"
+
+## Step 4: Create a new repository on GitHub
+1. Go to https://github.com/new
+2. Name your repository: shaownak.github.io
+3. Do NOT initialize with a README, .gitignore, or license
+4. Click "Create repository"
+
+## Step 5: Add the GitHub repository as a remote
+git remote add origin https://github.com/shaownak/shaownak.github.io.git
+
+## Step 6: Push your code to GitHub
+git push -u origin main
+
+# If your default branch is "master" instead of "main", use:
+# git push -u origin master
+
+## Optional: If you have issues with authentication
+# GitHub now uses personal access tokens instead of passwords for HTTPS authentication
+# 1. Go to GitHub → Settings → Developer settings → Personal access tokens → Generate new token
+# 2. Give it a name, set expiration, and check the "repo" scope
+# 3. Copy the token and use it instead of your password when prompted
+
+## Step 7: Verify your site is published
+After pushing, wait a few minutes and then visit https://shaownak.github.io

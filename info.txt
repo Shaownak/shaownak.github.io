@@ -1,0 +1,126 @@
+Shaownak Shahriar
+ +8801705-243044 # shaownak.shahriar@gmail.com ï linkedin.com/in/shaownak-shahriar/
+§ github.com/Shaownak
+Summary
+I am a Computer Science graduate from BRAC University with nearly five years of experience in Robotics and AI,
+specializing in Computer Vision, Autonomous Systems, and Control Systems. I have worked on Mars Rovers (URC
+2023, IRC 2023), Autonomous Underwater Vehicles (ROBOSUB 2023 - 2nd place globally), and Unmanned Areal
+Systems (IMEchE UAS Challenge). My expertise includes AI, Machine Learning, Deep Learning, NLP, Robotics
+Control System, and Software Development. With a strong foundation in competitive programming, I am
+passionate about developing intelligent autonomous systems and AI-driven robotics solutions.
+Education
+BRAC University, School of Data Science Graduated in 2024
+Bachelor of Science in Computer Science Dhaka, Bangladesh
+• Notable Courses: Quantum Computing, Artificial Intelligence, Neural Networks,
+Introduction to Robotics, Pattern Recognition, Software Engineering, System Analysis and Design
+Experience
+Dubotech May 2024 – October 2024
+Autonomous Systems Engineer Dhaka, Bangladesh
+• Developed control software for AUVs, collaborating with the software team to control the AUV from base station.
+• Designed and implemented a GAN-based real-time underwater video enhancement algorithm, incorporating color
+correction techniques.
+• Integrated and optimized autonomous control systems utilizing Pixhawk, Raspberry Pi, and Nvidia Jetson Orin Nano,
+interfacing with various onboard sensors.
+BRACU Duburi June 2021 – April 2024
+Sub-Team Lead, AI and Machine Vision Dhaka, Bangladesh
+• Led the vision and control system development for BRACU Duburi’s autonomous underwater vehicle.
+• Developed a core navigation algorithm leveraging machine vision for underwater object detection.
+• Implemented and optimized deep learning models (SSD MobileNet V2, YOLO v3/v4/v5, Mask R-CNN) on Nvidia
+Jetson Nano for real-time underwater object recognition.
+• Integrated and tuned Pixhawk-based control systems, incorporating ROS (Robot Operating System) and vector-based
+navigation.
+• Designed and implemented sensor fusion algorithms using Kalman Filter and Madgwick Algorithm to enhance IMU,
+compass, and depth sensor accuracy.
+• Developed and fine-tuned PID controllers to optimize AUV maneuverability.
+• Worked extensively with embedded systems, including Nvidia Jetson Nano, Raspberry Pi, Pixhawk, ESP32, and
+Arduino.
+BRACU Mongol-Tori January 2022 – August 2023
+Senior Member, Autonomous Systems and AI Dhaka, Bangladesh
+• Developed autonomous navigation algorithms integrating VectorNav for precise localization.
+• Designed and deployed deep learning models (YOLO v5, Faster R-CNN, SSD MobileNet V2) for object detection,
+including rock identification, tool recognition, and equipment inspection in Martian-like environments.
+• Implemented SLAM (Simultaneous Localization and Mapping) using LiDAR and Intel RealSense cameras, fusing IMU
+and GPS data for aerial and terrain mapping.
+• Developed motor control strategies using L298N, IBT2, Monster, and Cytron motor drivers for optimal robotic mobility.
+• Integrated ROS for real-time robotic communication and autonomous operations.
+• Worked extensively with Nvidia Jetson Nano, Raspberry Pi, Pixhawk, ESP32, and Arduino, interfacing with IMU,
+LiDAR, RealSense, and various sensor modules.
+Technical Skills
+Languages: Python, C, C++, C#, Arduino.
+Data Science Tools and Framework: TensorFlow, Pytorch, Jetson Inference, OpenCV, ScikitLearn, Keras, MiDAS,
+PyNltk, Numpy, Pandas, MatplotLib.
+Models: SSD MobileNet, YOLO, FasterRCNN, EfficientDet, Mask-RCNN, Complex-YOLOv4, SE-SSD, GLENetVR,
+Inception v3, Xception, VGG16, Reinforcement Learning, GAN, BERT, LSTM, GRU, Conv1D, Decision Tree Regressor,
+Random Forest, KNN, XGBoost, Ada Boost.
+Robotics: Rover Autonomy, Robot Vision, Robotics Control System.
+Tools and Technologies: Linux, ROS, Nvidia Jetson Nano, Rspberry Pi, Arduino, ESP32, Stero Vision, SLAM.
+Sensors: IMU, GPS, Vectornav, SBG, RTK.
+Software Development: ASP.NET, Django, MySQL, Microsoft SQL, HTML, CSS, Bootstrap.
+Miscellaneous: Git, LaTex.
+Projects
+Autonomous Systems & Robotics
+• BRACU RaptorX (Dec 2023 - Dec 2024) – Co-founded BRACU RaptorX for UAS research, developing the country’s
+first autonomous quad plane (VTOL). Led Autonomous & Navigation team, building hardware/software and conducting
+autonomous flights.
+• Shurokkha Rescue Bot (Nov 2023) – Developed an autonomous rescue robot for disaster response, integrating object
+detection, localization, and aerial mapping.
+• Object Detection & Navigation with CV and Arduino (Feb 2022) – Built an autonomous navigation system using
+computer vision and Arduino. GitHub
+Machine Vision & AI
+• Object Detection – Developed various object detection models:
+∗ 3D Object Detection: Complex-YOLOv4, SE-SSD, GLENetVR
+∗ Image Segmentation: Mask-RCNN
+∗ Underwater Object Detection: YOLOv4-v8, SSD MobileNet v2
+∗ Mars Surface Detection: YOLOv5, SSD MobileNet, Faster-RCNN
+• Sentiment Analysis (Aug 2022) – Analyzed Food, Toxic, and Twitter datasets using LSTM, GRU, BERT, and
+Conv1D. GitHub
+• Face Mask Detector (Oct 2021) – Built a real-time face mask detection model. GitHub
+• Arrow Direction Detection and Distance Measurement (Oct 2022) – Developed an arrow detection system for
+measuring direction and distance. GitHub
+• Multi-camera Threading using OpenCV (May 2022) – Built a real-time multi-camera system for efficient video
+processing. GitHub
+IoT & Control Systems
+• Gas Flow Controller System (Sep 2023 - Oct 2023) – Designed an IoT-based gas leak detection system with
+automated shut-off, alarms, and remote monitoring.
+• MPU6050 Sensor Fusion using Kalman Filter (Dec 2022) – Implemented sensor fusion with Kalman filtering for
+motion tracking. GitHub
+Software
+• Bracu Lost-and-Found (Oct 2022) – Developed a website for finding lost items in Brac University premises using
+Django and MySQL. GitHub
+• ERP Software for E-commerce using ASP.NET MVC (December 2024). GitHub
+Achievements
+• Participated in IMechE UAS Challenge 2024 – Bracu RaptorX, IMechE (Leicester, England)
+• First Runner-up (Globally) at ROBOSUB 2023 – Bracu Duburi, RoboNation (San Diego, California, USA)
+• Participant in University Rover Challenge (URC) 2023 – BRACU Mongol-Tori, The Mars Society (Utah, USA)
+• 7th Position (Globally) in International Rover Challenge (IRC) 2023 – BRACU Mongol-Tori, The Space Robotics
+Society (Bangalore, India)
+• 3rd Position in International Kibo Robot Programming Competition 2022 (Bangladesh Round) – JAXA
+(Dhaka, Bangladesh)
+• 3rd Position in BRACU Intra University Programming Contest 2021 – BRAC University (Dhaka, Bangladesh)
+Academic Thesis and Research
+Point-Cloud-based 3D Object Detection for Autonomous Navigation in Unmanned Ground Vehicles
+May 2023 – October 2024
+• Our research focuses on improving 3D object detection for autonomous Unmanned Ground Vehicles (UGVs) by
+addressing the limitations of traditional 2D detection methods. We propose a two-stage pipeline that leverages point
+cloud data to generate 3D object proposals, followed by a fusion of GLENetVR and SE-SSD architectures for accurate
+detection. This hybrid approach enhances spatial understanding, improving object distinction and recognition in complex
+environments. Through extensive evaluations on benchmark datasets, our model demonstrates superior accuracy,
+surpassing both standalone SE-SSD and GLENetVR models, contributing to safer and more reliable UGV navigation.
+Research Mentorship
+• Smart Driver Safety System based on driver Drowsiness Detection, Car Lane detection and Depth
+estimation (July 2023 – October 2023)
+• Breast Cancer Detection by fusing SSD MobileNet v2, VGG16 and ResNet with KNN, Random Forest
+and XGBoost (November 2022 – December 2022)
+• Underwater waster detection on muddy water by fine tuning Yolo v5, v7 and EfficientDet-D0 (October
+2023 – January 2024)
+Other Notable Experiences
+Robotics Instructor, BRAC University May 2022 - August 2023
+BRAC University
+• Worked as a robotics instructor for the course ”Introduction to Robotics” offered at BRAC University for three
+consecutive semesters.
+• Served as a robotics instructor at the BRAC Hope Fest hosted by BRAC University in June 2023.
+Robotics Club of BRAC University (ROBU) January 2020 - December 2023
+Senior Executive of Strategic Planning
+• Served as a robotics instructor for workshops such as ”Basics of Robotics.”
+• Conducted several workshops on ”Introduction to Computer Vision” and ”Introduction to Autonomous Systems.”
+• Built and maintained strong connections within the robotics and academic community.
