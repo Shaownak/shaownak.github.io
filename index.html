@@ -516,14 +516,21 @@
             .hero { padding: 90px 0 60px; }
 
             .hero-content {
-                flex-direction: column-reverse;
+                flex-direction: column;
                 text-align: center;
-                gap: 2rem;
+                gap: 1.75rem;
             }
             .hero-text p { margin-left: auto; margin-right: auto; }
             .social-links { justify-content: center; }
 
-            .profile-photo { width: min(320px, 90vw); }
+            /* .profile-photo { width: min(320px, 90vw); } */
+            .profile-photo {
+                width: 220px;       /* smaller on mobile */
+                max-width: 70vw;    /* responsive safety */
+                height: auto;
+                margin: 0 auto;     /* center */
+            }
+
 
             .skill-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
             .skill-row h3 { flex: 1 1 auto; width: 100%; }
@@ -552,18 +559,141 @@
                 border-top-right-radius: var(--radius-lg);
                 border-bottom-left-radius: 0;
             }
+
+            .social-links {
+                justify-content: center;
+                gap: 0.6rem;
+            }
+
+            .btn-social {
+                width: auto;              /* stop full-row stretching */
+                flex: 0 0 auto;           /* don't grow */
+                padding: 0.55rem 0.9rem;  /* slightly smaller */
+                font-size: 0.85rem;
+                white-space: nowrap;      /* keep text in one line */
+            }
         }
 
         @media (max-width: 480px) {
             .container { padding: 0 16px; }
             section { padding: 64px 0; }
-            .btn-social { width: 100%; justify-content: center; }
+            /* .btn-social { width: 100%; justify-content: center; } */
             .media-grid { grid-template-columns: 1fr; }
             .grid-2col { grid-template-columns: 1fr; }
+
+            .btn-social {
+                width: calc(50% - 0.4rem);
+                justify-content: center;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
             * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+        }
+        
+        /* =========================================
+        NOTICE BOARD (NO-JS)
+        ========================================= */
+        .notice-board {
+            margin: 1.25rem 0 1.75rem;
+            padding: 0.95rem 1.05rem;
+            background: linear-gradient(90deg, rgba(67, 56, 202, 0.10), rgba(67, 56, 202, 0.04));
+            border: 1px solid rgba(67, 56, 202, 0.25);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .notice-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+
+        .notice-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: #22C55E;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+            flex: 0 0 auto;
+            margin-top: 7px;
+        }
+
+        .notice-text { min-width: 0; }
+
+        .notice-title {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            color: var(--text-heading);
+            font-size: 1rem;
+            line-height: 1.2;
+            margin-bottom: 0.15rem;
+        }
+
+        .notice-subtitle {
+            font-size: 0.92rem;
+            color: var(--text-body);
+            line-height: 1.45;
+        }
+
+        .notice-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 0 0 auto;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .notice-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.45rem 0.8rem;
+            border-radius: 999px;
+            border: 1px solid var(--border-light);
+            background: var(--bg-surface);
+            color: var(--text-heading);
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.82rem;
+            box-shadow: var(--shadow-subtle);
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .notice-pill:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            transform: translateY(-1px);
+        }
+
+        .notice-pill-primary {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #fff !important;
+        }
+
+        .notice-pill-primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+            color: #fff !important;
+        }
+
+        @media (max-width: 768px) {
+            .notice-board {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: left;
+            }
+            .notice-actions {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -578,6 +708,26 @@
                 <div class="hero-text">
                     <h1>Shaownak Shahriar</h1>
                     <h2>AI & Software Engineer | Computer Vision & Backend Systems</h2>
+
+                    <!-- =========================
+                    NOTICE BOARD (NO-JS)
+                    ========================= -->
+                    <div class="notice-board" role="status" aria-label="Availability notice">
+                    <div class="notice-left">
+                        <span class="notice-dot" aria-hidden="true"></span>
+                        <div class="notice-text">
+                        <div class="notice-title">Open to ML & Software Engineering roles</div>
+                        <div class="notice-subtitle">Also available for Computer Vision research collaborations and applied AI projects.</div>
+                        </div>
+                    </div>
+
+                    <div class="notice-actions">
+                        <a class="notice-pill" href="#projects">View Projects</a>
+                        <a class="notice-pill notice-pill-primary" href="mailto:shaownak.shahriar@gmail.com?subject=Opportunity%20-%20ML%20or%20Software%20Engineering">Contact</a>
+                    </div>
+                    </div>
+
+
 
                     <p>
                         AI & Software Engineer specializing in <strong>Computer Vision</strong>, <strong>Autonomous Systems</strong>, and <strong>Scalable Backend Architecture</strong>. Passionate about bridging the gap between cutting-edge algorithmic research and robust, production-ready infrastructure. Proven expertise in building end-to-end intelligent systems—from deploying <strong>real-time perception models</strong> on edge devices to architecting <strong>microservices-based web applications</strong>—utilizing <strong>PyTorch</strong>, <strong>Django</strong>, and modern <strong>MLOps principles</strong>.
@@ -683,44 +833,7 @@
             </div>
         </section>
 
-        <section id="education">
-            <h2>Education</h2>
-
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title">Master of Science in Computer Science and Engineering</div>
-                        <div class="card-subtitle">Major in Data Science | BRAC University</div>
-                    </div>
-                    <div class="card-date">Jan 2026 - Present</div>
-                </div>
-                <div class="card-content">
-                    <ul>
-                        <li>Currently pursuing advanced coursework focusing on <strong>Data Science</strong>, machine learning algorithms, and advanced computing infrastructure.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title">Bachelor of Science in Computer Science</div>
-                        <div class="card-subtitle">BRAC University</div>
-                    </div>
-                    <div class="card-date">Graduated Nov 2025</div>
-                </div>
-                <div class="card-content">
-                    <ul>
-                        <li><strong>Thesis:</strong> Point-Cloud-based 3D Object Detection for Autonomous Navigation (Awarded <strong>Best Thesis of the Year 2024</strong>).</li>
-                        <li><strong>Research Interests:</strong> Computer Vision, Rover Autonomy.</li>
-                        <li><strong>Notable Courses:</strong> Quantum Computing, Artificial Intelligence, Neural Networks, Robotics, Pattern Recognition, Software Engineering, System Design.</li>
-                        <li><strong>Mentorship:</strong> Mentored 4 undergraduate thesis groups on applied Computer Vision research (including Driver Safety, Breast Cancer Detection, and Underwater Waste Detection).</li>
-                        <li><strong>Competitions:</strong> Represented BRAC University in multiple International Robotics Championships (UGV, AUV, UAS), national robotics competitions, and Intra-University Programming Contests (IUPC).</li>
-                        <li><strong>Key Involvement:</strong> Co-Founder of RaptorX, Senior Engineer at Mongol-Tori, and Sub-Team Lead at BRACU Duburi.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+        <!--------------- Technical Experience------------ -->
 
         <section id="experience">
             <h2>Professional Experience</h2>
@@ -866,6 +979,48 @@
                 </div>
             </div>
         </section>
+
+        <!-- ----- --------- Education -------------- -->
+         <section id="education">
+            <h2>Education</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Master of Science in Computer Science and Engineering</div>
+                        <div class="card-subtitle">Major in Data Science | BRAC University</div>
+                    </div>
+                    <div class="card-date">Jan 2026 - Present</div>
+                </div>
+                <div class="card-content">
+                    <ul>
+                        <li>Currently pursuing advanced coursework focusing on <strong>Data Science</strong>, machine learning algorithms, and advanced computing infrastructure.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Bachelor of Science in Computer Science</div>
+                        <div class="card-subtitle">BRAC University</div>
+                    </div>
+                    <div class="card-date">Graduated Nov 2025</div>
+                </div>
+                <div class="card-content">
+                    <ul>
+                        <li><strong>Thesis:</strong> Point-Cloud-based 3D Object Detection for Autonomous Navigation (Awarded <strong>Best Thesis of the Year 2024</strong>).</li>
+                        <li><strong>Research Interests:</strong> Computer Vision, Rover Autonomy.</li>
+                        <li><strong>Notable Courses:</strong> Quantum Computing, Artificial Intelligence, Neural Networks, Robotics, Pattern Recognition, Software Engineering, System Design.</li>
+                        <li><strong>Mentorship:</strong> Mentored 4 undergraduate thesis groups on applied Computer Vision research (including Driver Safety, Breast Cancer Detection, and Underwater Waste Detection).</li>
+                        <li><strong>Competitions:</strong> Represented BRAC University in multiple International Robotics Championships (UGV, AUV, UAS), national robotics competitions, and Intra-University Programming Contests (IUPC).</li>
+                        <li><strong>Key Involvement:</strong> Co-Founder of RaptorX, Senior Engineer at Mongol-Tori, and Sub-Team Lead at BRACU Duburi.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ------------- Research ---------------- -->
 
         <section id="research">
             <h2>Academic Thesis</h2>
