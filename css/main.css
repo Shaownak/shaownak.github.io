@@ -733,6 +733,24 @@ html:has(dialog.sheet[open]){overflow:hidden}
    the one deliberately cinematic beat on the page. CSS only, so it plays
    before the scripts have loaded. */
 .hero-eyebrow{animation:m-up .8s var(--ease) .05s both}
+/* With scripts on, the label is typed instead (main.js). The fade is pushed
+   back to .3s so the script, which runs within a frame or two, can cancel it
+   before anything shows; if the script never runs, the label still fades in. */
+:where(.js) .hero-eyebrow{animation-delay:.3s}
+.hero-eyebrow.typing{animation:none}
+.hero-eyebrow.typing .t-ch{opacity:0}
+.hero-eyebrow.typing .t-ch.on{opacity:1}
+/* Zero-width, so moving it never shifts the text. Blinks three times once the
+   line is complete, then fades out: nothing keeps moving. */
+.t-caret{position:relative;display:inline-block;width:0}
+.t-caret::after{
+  content:"";position:absolute;left:1px;top:-.85em;width:.55em;height:1.1em;
+  background:var(--sig);
+}
+.t-caret.done::after{animation:t-blink .5s steps(1) 3,m-fade .3s ease 1.5s reverse both}
+@keyframes t-blink{50%{opacity:0}}
+/* one hidden copy of the full label for screen readers */
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .hero h1{animation:m-focus 1.1s var(--ease) .12s both}
 .hero-lede{animation:m-up .8s var(--ease) .3s both}
 .hero-reach{animation:m-up .8s var(--ease) .4s both}
