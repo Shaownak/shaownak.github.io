@@ -100,44 +100,82 @@ def open_graph(im):
         os.path.join(ROOT, "og.jpg"), "JPEG", quality=84, optimize=True, progressive=True)
 
 
+# ---------------------------------------------------------------------------
+# The mark: a detection box — four corner brackets — around an indigo point.
+# The brackets are what a perception model draws around what it finds, and
+# the same corner ticks frame every figure on the page; the point is the
+# sensor origin of the hero's LiDAR scene. Matte black tile, so it reads on
+# light and dark browser tabs alike.
+#
+# Defined once, as rectangles on a 32-unit grid, and rendered from that for
+# every file: favicon.svg, favicon.ico (16/32/48) and apple-touch-icon.png.
+# 16px gets its own pixel-snapped geometry, because a 2.5-unit stroke
+# downsampled to 16px lands on half pixels and turns to grey mush.
+# ---------------------------------------------------------------------------
+MARK_BG = "#0C0C0B"      # dark --bg
+MARK_INK = "#EEEDE9"     # dark --ink
+MARK_SIG = "#9A93FF"     # dark --sig
+
+def _mark_rects(u, inset, arm, stroke, dot):
+    """Rectangles (x0, y0, x1, y1, colour) on a u-unit grid."""
+    a, b = inset, u - inset
+    r = []
+    for (cx, dx) in ((a, 1), (b, -1)):
+        for (cy, dy) in ((a, 1), (b, -1)):
+            x0, x1 = sorted((cx, cx + dx * arm))
+            y0, y1 = sorted((cy, cy + dy * stroke))
+            r.append((x0, y0, x1, y1, MARK_INK))          # horizontal arm
+            x0, x1 = sorted((cx, cx + dx * stroke))
+            y0, y1 = sorted((cy, cy + dy * arm))
+            r.append((x0, y0, x1, y1, MARK_INK))          # vertical arm
+    c0, c1 = (u - dot) / 2, (u + dot) / 2
+    r.append((c0, c0, c1, c1, MARK_SIG))
+    return r
+
+MARK_32 = dict(u=32, inset=6, arm=7, stroke=2.5, dot=6, radius=7)
+MARK_16 = dict(u=16, inset=3, arm=4, stroke=1,   dot=4, radius=3)
+
+def _render_mark(size, spec, ss=8):
+    """Supersampled render of the mark at size x size pixels."""
+    big = size * ss
+    k = big / spec["u"]
+    im = Image.new("RGBA", (big, big), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([0, 0, big - 1, big - 1], radius=spec["radius"] * k, fill=MARK_BG)
+    for x0, y0, x1, y1, col in _mark_rects(spec["u"], spec["inset"], spec["arm"], spec["stroke"], spec["dot"]):
+        d.rectangle([x0 * k, y0 * k, x1 * k - 1, y1 * k - 1], fill=col)
+    return im.resize((size, size), Image.LANCZOS)
+
+
 def touch_icon():
-    """Matches the inline SVG favicon in index.html — keep the two in step."""
-    ic = Image.new("RGB", (180, 180), SIGNAL)
-    d = ImageDraw.Draw(ic)
-    d.line([(90, 26), (90, 154)], fill=PAPER, width=14)
-    d.line([(26, 90), (154, 90)], fill=PAPER, width=14)
+    """apple-touch-icon.png. iOS rounds the corners itself, so the tile is
+    square and full-bleed here, with the mark scaled into its safe area."""
+    ic = Image.new("RGB", (180, 180), MARK_BG)
+    m = _render_mark(150, dict(MARK_32, radius=0))
+    ic.paste(m, (15, 15), m)
     ic.save(os.path.join(ROOT, "apple-touch-icon.png"), "PNG", optimize=True)
 
 
 def favicons():
-    """favicon.svg + favicon.ico, drawn from the same mark as the touch icon.
+    """favicon.svg + favicon.ico, from the same rectangles as the touch icon.
 
-    The page used to declare the favicon as an inline `data:` URI. Browsers
-    accept that, but Google will not use a data URI for the favicon it shows
-    beside a search result — it needs a URL it can crawl. So the mark is
-    written out as real files: SVG for anything modern, ICO at 16/32/48 for
-    everything else and for the search result. All three are generated here,
-    so the mark is defined in exactly one place.
+    Real files, not an inline `data:` URI: Google will not use a data URI
+    for the favicon beside a search result. SVG for modern browsers; ICO at
+    16/32/48 for everything else and for the search result.
     """
-    svg = (
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">'
-        '<rect width="32" height="32" fill="%s"/>'
-        '<path d="M16 5v22M5 16h22" stroke="%s" stroke-width="2.5"/>'
-        '</svg>' % (SIGNAL_HEX, PAPER_HEX)
-    )
+    sp = MARK_32
+    parts = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">',
+             '<rect width="32" height="32" rx="%g" fill="%s"/>' % (sp["radius"], MARK_BG)]
+    for x0, y0, x1, y1, col in _mark_rects(sp["u"], sp["inset"], sp["arm"], sp["stroke"], sp["dot"]):
+        parts.append('<rect x="%g" y="%g" width="%g" height="%g" fill="%s"/>' % (x0, y0, x1 - x0, y1 - y0, col))
+    parts.append('</svg>')
     with io.open(os.path.join(ROOT, "favicon.svg"), "w", encoding="utf-8") as f:
-        f.write(svg + "\n")
+        f.write("".join(parts) + "\n")
 
-    # Drawn at 256 and downsampled: a 16px bar drawn directly lands off-centre.
-    base = Image.new("RGB", (256, 256), SIGNAL)
-    d = ImageDraw.Draw(base)
-    d.line([(128, 40), (128, 216)], fill=PAPER, width=20)
-    d.line([(40, 128), (216, 128)], fill=PAPER, width=20)
-    base.save(
-        os.path.join(ROOT, "favicon.ico"),
-        "ICO",
-        sizes=[(16, 16), (32, 32), (48, 48)],
-    )
+    frames = {16: _render_mark(16, MARK_16), 32: _render_mark(32, MARK_32), 48: _render_mark(48, MARK_32)}
+    frames[48].save(os.path.join(ROOT, "favicon.ico"), "ICO",
+                    sizes=[(16, 16), (32, 32), (48, 48)],
+                    append_images=[frames[16], frames[32]])
 
 
 
