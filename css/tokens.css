@@ -1,0 +1,188 @@
+/* ===============================================================
+   tokens.css — Shaownak Shahriar · technical datasheet
+   Surfaces, ink ramp, one signal colour, type and a 4px spine.
+   Every dimension in main.css comes from this file.
+   =============================================================== */
+
+/* ---------------------------------------------------------------
+   Self-hosted IBM Plex, latin subset, woff2 only.
+   Sans is the variable face — one 45 KB file covers 400/500/600.
+   Licensed under the SIL OFL 1.1; see fonts/LICENSE.txt.
+   --------------------------------------------------------------- */
+@font-face{
+  font-family:"IBM Plex Sans";
+  src:url("../fonts/ibm-plex-sans-var-latin.woff2") format("woff2");
+  font-weight:100 700;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:"IBM Plex Mono";
+  src:url("../fonts/ibm-plex-mono-400-latin.woff2") format("woff2");
+  font-weight:400;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:"IBM Plex Mono";
+  src:url("../fonts/ibm-plex-mono-500-latin.woff2") format("woff2");
+  font-weight:500;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+:root{
+  /* surfaces — warm technical white */
+  --bg:#FBFBF9;
+  --bg-2:#F3F3EF;
+  --bg-3:#EAEAE5;
+
+  /* hairlines */
+  --line:#DFDFD8;
+  --line-2:#C4C4BB;
+  --line-3:#101113;
+
+  /* ink ramp */
+  --ink:#101113;
+  --ink-2:#3B3F45;
+  --ink-3:#686D75;
+  --ink-4:#9BA0A8;
+
+  /* signal — one accent, used for marks and live data only.
+     Electric indigo: cool against the warm paper, 6.1:1 on --bg and
+     5.7:1 on --bg-2, so it is safe for text as well as marks. */
+  --sig:#4F46E5;
+  --sig-2:#7C74F0;
+  --sig-3:#E9E8FD;
+
+  /* domain colours — air, land, water. Generated, not picked: all three sit
+     at the same OKLCH lightness (0.505) and chroma (0.085), differing only in
+     hue (235 / 58 / 178), so none shouts over the others and they read as one
+     printed palette. Muted on purpose — they are labels, not alarms. Small
+     marks only (codes, rules, row markers), never fills behind text or body
+     copy. Contrast as text, worst surface / as a fill under --bg text:
+     air 4.8 / 5.6, land 5.0 / 5.8, water 4.7 / 5.4. The label (Air, Land,
+     Water) always travels with the colour, so it is never the only cue. */
+  --air:#2B6C8E;
+  --land:#895830;
+  --water:#1A7465;
+
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  /* 4px spine */
+  --s1:4px;  --s2:8px;   --s3:12px;  --s4:16px;  --s5:24px;
+  --s6:32px; --s7:48px;  --s8:64px;  --s9:96px;  --s10:128px;
+
+  /* composited surfaces — pulled out of main.css so the dark theme can
+     restate them. A translucent bar needs a literal rgba(), not a token
+     reference, because backdrop-filter sits behind it. */
+  --bar-bg:rgba(251,251,249,.92);      /* top bar, under 1000px */
+  --bar-bg-side:rgba(240,240,236,.78); /* left sidebar, 1000px and up */
+  --sheet-shadow:0 24px 60px rgba(16,17,19,.22);
+  --backdrop:rgba(16,17,19,.55);
+
+  /* motion — one curve for everything that moves: a fast start that
+     settles slowly, so things arrive rather than slide. */
+  --ease:cubic-bezier(.16,1,.3,1);
+
+  --gut:clamp(20px,4.5vw,60px);
+  --maxw:1300px;
+  --bar:46px;
+  --side:212px;   /* left sidebar width at >=1000px */
+}
+
+/* ================= DARK THEME =================================
+   Two selectors, one palette. The media query serves anyone whose OS asks
+   for dark, unless they have explicitly chosen light here; the attribute
+   rule serves an explicit choice of dark on a light OS. Both blocks must
+   stay byte-identical — they are generated together. js/theme.js sets
+   data-theme on <html>; with JS off the media query still works.
+   ============================================================== */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+  color-scheme:dark;
+
+  /* surfaces — matte black and dark ash. Neutral, no blue cast: the
+     earlier graphite (#0E1012) leaned cool and read as a code editor.
+     Never pure #000 either — a true black next to white certificate
+     scans glares, and hairlines vanish into it. --bg is the matte black
+     of the main sections; --bg-2 is the ash of the alternate sections and
+     the sidebar, so the page alternates black / ash as you scroll. */
+  --bg:#0C0C0B;
+  --bg-2:#171716;
+  --bg-3:#21211F;
+
+  --line:#2B2B28;
+  --line-2:#3C3B38;
+  --line-3:#EEEDE9;
+
+  /* ink ramp — warm off-white to ash grey, matched to the neutral surfaces.
+     --ink-3 is still the lightest colour permitted for text (4.9:1 on
+     --bg-3, the worst case); --ink-4 is still below AA and reserved for
+     non-text marks. */
+  --ink:#EEEDE9;
+  --ink-2:#BFBDB7;
+  --ink-3:#8F8D87;
+  --ink-4:#5F5D58;
+
+  /* signal — the same indigo lifted until it clears AA on matte black:
+     7.5:1 on --bg, 6.1:1 on --bg-3, and 7.5:1 reversed (--bg on a --sig
+     fill). */
+  --sig:#9A93FF;
+  --sig-2:#B6B0FF;
+  --sig-3:#1E1C33;   /* muted: a saturated violet patch fights matte black */
+
+  /* domain colours for graphite: same hues, OKLCH L 0.80 / C 0.075 — soft
+     steel, sand and sage rather than neon. 8.5:1 or better as text. */
+  --air:#8EC6E7;
+  --land:#E3B28E;
+  --water:#87CEBE;
+
+  --bar-bg:rgba(12,12,11,.92);
+  --bar-bg-side:rgba(23,23,22,.86);
+  --sheet-shadow:0 24px 60px rgba(0,0,0,.6);
+  --backdrop:rgba(0,0,0,.66);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+
+  /* surfaces — matte black and dark ash. Neutral, no blue cast: the
+     earlier graphite (#0E1012) leaned cool and read as a code editor.
+     Never pure #000 either — a true black next to white certificate
+     scans glares, and hairlines vanish into it. --bg is the matte black
+     of the main sections; --bg-2 is the ash of the alternate sections and
+     the sidebar, so the page alternates black / ash as you scroll. */
+  --bg:#0C0C0B;
+  --bg-2:#171716;
+  --bg-3:#21211F;
+
+  --line:#2B2B28;
+  --line-2:#3C3B38;
+  --line-3:#EEEDE9;
+
+  /* ink ramp — warm off-white to ash grey, matched to the neutral surfaces.
+     --ink-3 is still the lightest colour permitted for text (4.9:1 on
+     --bg-3, the worst case); --ink-4 is still below AA and reserved for
+     non-text marks. */
+  --ink:#EEEDE9;
+  --ink-2:#BFBDB7;
+  --ink-3:#8F8D87;
+  --ink-4:#5F5D58;
+
+  /* signal — the same indigo lifted until it clears AA on matte black:
+     7.5:1 on --bg, 6.1:1 on --bg-3, and 7.5:1 reversed (--bg on a --sig
+     fill). */
+  --sig:#9A93FF;
+  --sig-2:#B6B0FF;
+  --sig-3:#1E1C33;   /* muted: a saturated violet patch fights matte black */
+
+  /* domain colours for graphite: same hues, OKLCH L 0.80 / C 0.075 — soft
+     steel, sand and sage rather than neon. 8.5:1 or better as text. */
+  --air:#8EC6E7;
+  --land:#E3B28E;
+  --water:#87CEBE;
+
+  --bar-bg:rgba(12,12,11,.92);
+  --bar-bg-side:rgba(23,23,22,.86);
+  --sheet-shadow:0 24px 60px rgba(0,0,0,.6);
+  --backdrop:rgba(0,0,0,.66);
+}

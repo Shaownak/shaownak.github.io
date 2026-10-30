@@ -1,0 +1,886 @@
+/* ===============================================================
+   main.css — technical datasheet
+   Devices, used deliberately and sparingly:
+     1. drawing title block   .tblock
+     2. corner registration ticks on every figure   .fig-frame
+     3. leader-ruled spec rows   .spec
+     4. mono reference codes   PLT-01 / SYS-03 / FIG 04
+   Load after tokens.css.
+   =============================================================== */
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  scroll-padding-top:var(--bar);
+}
+picture{display:block}
+img{display:block;width:100%;height:auto}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--sig);outline-offset:3px}
+::selection{background:var(--sig-3);color:var(--ink)}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut)}
+.mono{font-family:var(--mono)}
+
+/* mono label — the workhorse of the whole sheet */
+.lbl{
+  font-family:var(--mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+}
+.lbl-sig{color:var(--sig)}
+
+/* Skip link. Off-screen until focused, then it lands over the bar. Kept above
+   the header in source order so it is the first thing a keyboard reaches — the
+   left rail holds eight links, and tabbing past them on every visit is the kind
+   of tax nobody notices until they have to pay it. */
+.skip{
+  position:absolute;left:var(--s4);top:var(--s4);z-index:100;
+  transform:translateY(-200%);
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--ink);color:var(--bg);padding:10px var(--s4);text-decoration:none;
+}
+.skip:focus{transform:none}
+
+/* ---------------- top bar ---------------- */
+.bar{
+  position:sticky;top:0;z-index:50;height:var(--bar);
+  background:var(--bar-bg);
+  -webkit-backdrop-filter:saturate(180%) blur(10px);
+  backdrop-filter:saturate(180%) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;height:var(--bar);gap:var(--s5)}
+.bar a{text-decoration:none}
+.bar-id{display:flex;align-items:center;gap:var(--s3);font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.bar-id::before{content:"";width:9px;height:9px;background:var(--sig);flex:none}
+.bar-nav{display:flex;gap:var(--s5);overflow:hidden}
+.bar-nav a{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);transition:color .18s}
+.bar-nav a:hover{color:var(--sig)}
+.bar-nav a.is-active{color:var(--sig);border-bottom:1px solid var(--sig);padding-bottom:2px}
+.bar-rev{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-3);white-space:nowrap}
+/* The one action on the page. It is the only accent-coloured element in the
+   header, and it is outside .bar-nav so it survives the breakpoint where the
+   section links are hidden — on a phone the CV is still one tap away. */
+.bar-cv{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--sig);border:1px solid var(--sig-3);background:var(--sig-3);
+  padding:8px var(--s3);white-space:nowrap;
+  transition:background-color .18s ease,border-color .18s ease;
+}
+.bar-cv:hover{background:transparent;border-color:var(--sig)}
+
+/* Theme switch. Hidden without JS — with the script absent the button cannot
+   do anything, and the media query in tokens.css already follows the OS, so a
+   dead control would be worse than none. Deliberately not accent-coloured:
+   the CV button is the one action in the header and should stay the only
+   thing competing for a click. The square swaps fill with the theme, which
+   is the whole affordance — no icon font, no inline SVG. */
+.bar-theme{
+  display:none;align-items:center;gap:var(--s3);
+  font-family:var(--mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);background:none;border:0;padding:0;cursor:pointer;
+  white-space:nowrap;transition:color .18s ease;
+}
+:where(.js) .bar-theme{display:inline-flex}
+.bar-theme:hover,.bar-theme:focus-visible{color:var(--sig)}
+.bar-theme-ico{
+  width:9px;height:9px;flex:none;border:1.5px solid currentColor;
+  background:linear-gradient(135deg,currentColor 0 50%,transparent 50% 100%);
+}
+
+/* ---------------- the bar becomes a left sidebar ---------------- */
+/* Asked for and measured: a fixed rail costs content width on laptops. The
+   gutter is tightened at the same breakpoint to claw most of it back — at
+   1280 the figure column goes 570px -> 489px, and at 1600 it actually gains
+   (578px -> 598px) because the narrower gutter more than pays for the rail.
+   Below 1000px there is not enough width for a sidebar, so the same element
+   reverts to the horizontal top bar. */
+@media (min-width:1000px){
+  :root{--gut:clamp(24px,2.6vw,40px)}
+  html{scroll-padding-top:var(--s5)}
+  body{padding-left:var(--side)}
+  .bar{
+    /* the base rule is position:sticky; a full-height rail needs fixed */
+    position:fixed;top:0;left:0;bottom:0;width:var(--side);height:auto;
+    border-bottom:0;border-right:1px solid var(--line);
+    /* Translucent and blurred. Content sits beside the rail rather than under
+       it, so at rest there is nothing to see through — the visible effect is
+       the faint tint separating the panel from the page, not the blur. The
+       filter is kept so the panel behaves correctly if anything ever does
+       pass beneath it. */
+    background:var(--bar-bg-side);
+    -webkit-backdrop-filter:saturate(150%) blur(16px);
+    backdrop-filter:saturate(150%) blur(16px);
+  }
+  .bar .wrap{
+    display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
+    height:100%;max-width:none;padding:var(--s5);gap:var(--s6);
+  }
+  .bar-id{font-size:16.5px;white-space:normal;line-height:1.25;letter-spacing:-.015em}
+  /* the section list takes the space between name and revision, and centres */
+  .bar-nav{flex:1;flex-direction:column;gap:0;overflow:visible;justify-content:center}
+  .bar-nav a{
+    display:block;padding:11px 0 11px var(--s4);
+    font-size:12px;letter-spacing:.1em;
+    border-left:2px solid var(--line);
+    transition:color .18s ease,border-color .18s ease;
+  }
+  /* Contact is an action, not a seventh section. A hairline and a little air
+     separate it from the numbered list without adding a second coloured
+     element to compete with the CV button. */
+  .bar-nav a[href="#contact"]{
+    margin-top:var(--s4);padding-top:var(--s5);
+    border-top:1px solid var(--line);
+  }
+  .bar-nav a:hover{border-left-color:var(--line-2)}
+  .bar-nav a.is-active{
+    color:var(--sig);border-left-color:var(--sig);
+    border-bottom:0;padding-bottom:11px;
+  }
+  /* In the rail the switch sits with the revision mark, not with the nav:
+     it is chrome, not a section. */
+  .bar-theme{justify-content:flex-start;font-size:11px;margin-top:var(--s5)}
+  .bar-cv{margin-top:var(--s5)}
+  .bar-rev{font-size:11px;margin-top:var(--s4)}
+}
+
+/* Short laptop screens. Seven sections plus Contact, the name, the theme switch,
+   the CV button and the revision mark need ~684px of rail at the default link
+   spacing, so on a 1280x680 screen the bottom of the rail clipped. Below 760px
+   of height the links and the gaps between groups tighten instead. */
+@media (min-width:1000px) and (max-height:760px){
+  .bar .wrap{gap:var(--s4);padding-top:var(--s4);padding-bottom:var(--s4)}
+  .bar-nav a,.bar-nav a.is-active{padding-top:7px;padding-bottom:7px}
+  .bar-nav a[href="#contact"]{margin-top:var(--s2);padding-top:var(--s3)}
+  .bar-theme{margin-top:var(--s2)}
+  .bar-cv{margin-top:var(--s3)}
+  .bar-rev{margin-top:var(--s2)}
+}
+
+/* ---------------- hero ---------------- */
+.hero{padding:clamp(48px,8vw,104px) 0 var(--s8)}
+.hero-eyebrow{margin-bottom:var(--s5)}
+.hero h1{
+  font-size:clamp(40px,7.2vw,86px);font-weight:600;line-height:.98;
+  letter-spacing:-.035em;
+}
+.hero-lede{
+  margin-top:var(--s5);max-width:46ch;
+  font-size:clamp(17px,1.9vw,22px);line-height:1.45;
+  color:var(--ink-2);font-weight:400;letter-spacing:-.011em;
+}
+.hero-lede b{font-weight:600;color:var(--ink)}
+
+/* Direct-reach strip. Measured against the live site, its one clear advantage
+   was putting every contact route above the fold — nobody should have to scroll
+   to find an address. Kept as mono text on a hairline rather than five filled
+   buttons: coloured pills would break the one-accent rule the page runs on. */
+.hero-reach{
+  margin-top:var(--s6);list-style:none;
+  display:flex;flex-wrap:wrap;gap:0 var(--s6);
+  border-top:1px solid var(--line-2);padding-top:var(--s3);
+}
+.hero-reach a{
+  display:inline-flex;align-items:baseline;gap:var(--s2);
+  font-family:var(--mono);font-size:12px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-2);text-decoration:none;
+  padding:var(--s3) 0;
+  background:linear-gradient(currentColor,currentColor) 0 calc(100% - 6px)/0 1px no-repeat;
+  transition:color .18s ease,background-size .45s var(--ease);
+}
+.hero-reach a:hover,.hero-reach a:focus-visible{color:var(--sig);background-size:100% 1px}
+.hero-reach .lbl{color:var(--ink-4)}
+
+/* Hero visual: the live LiDAR point cloud (js/lidar.js). Hidden without
+   JavaScript, because a canvas with nothing drawing on it is an empty box;
+   the hero is then the text alone, as it was. Beside the name from 1000px,
+   stacked under the contact strip below that. The stage is tinted --bg-2 so
+   the points read as a display, not as marks scattered on the page. */
+.hero-viz{display:none}
+:where(.js) .hero-viz{display:block;margin-top:var(--s7);animation:m-fade 1.4s var(--ease) .6s both}
+.hero-viz-stage{position:relative;aspect-ratio:4/3;background:var(--bg-2);overflow:hidden}
+#lidar{display:block;width:100%;height:100%;cursor:grab;touch-action:pan-y}
+#lidar:active{cursor:grabbing}
+.hero-viz-hud{position:absolute;top:10px;font-size:9.5px;pointer-events:none}
+.hero-viz-hud-l{left:12px}
+.hero-viz-hud-r{right:12px;color:var(--sig)}
+@media (min-width:1000px){
+  :where(.js) .hero-top{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);
+    gap:var(--s7);align-items:center;
+  }
+  :where(.js) .hero-viz{margin-top:0}
+}
+
+/* drawing title block */
+.tblock{
+  margin-top:var(--s7);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--line);
+  border:1px solid var(--line);
+}
+.tblock>div{background:var(--bg);padding:var(--s4) var(--s4) var(--s5)}
+.tblock dt{margin-bottom:var(--s2)}
+.tblock dd{font-size:14.5px;line-height:1.4;color:var(--ink);font-weight:500}
+.tblock dd a{color:var(--sig);text-decoration:none;border-bottom:1px solid var(--sig-3)}
+.tblock dd a:hover{border-color:var(--sig)}
+.tblock .ok{color:var(--sig)}
+
+/* metric strip */
+.metrics{
+  margin-top:var(--s7);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s5);
+  border-top:2px solid var(--ink);padding-top:var(--s5);
+}
+.metric b{
+  display:block;font-family:var(--mono);font-weight:500;
+  font-size:clamp(28px,4vw,44px);line-height:1;letter-spacing:-.04em;
+  color:var(--sig);font-variant-numeric:tabular-nums;
+}
+.metric b i{font-style:normal;color:var(--ink-3)}
+.metric span{display:block;margin-top:var(--s3);max-width:24ch}
+
+/* ---------------- sections ---------------- */
+.sec{padding:var(--s9) 0}
+.sec.alt{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+/* Tried sticky (top:var(--bar)) and reverted: stuck, the bar plus the head held
+   127px — 15.4% of a 1440x820 laptop screen — to report which section you are in,
+   which the active mark in the nav already reports for free. It also pinned
+   .sec-note, framing meant to be read once on arrival, for the whole section.
+   Do not re-add it. */
+.sec-head{
+  display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:var(--s5);align-items:baseline;
+  border-top:2px solid var(--ink);padding-top:var(--s4);margin-bottom:var(--s8);
+}
+.sec-head h2{font-size:clamp(22px,3vw,32px);font-weight:600;letter-spacing:-.026em;line-height:1.1}
+.sec-head .sec-note{text-align:right;max-width:34ch;justify-self:end}
+.sec-intro{max-width:66ch;margin:calc(-1 * var(--s6)) 0 var(--s7);font-size:15.5px;line-height:1.6;color:var(--ink-2)}
+
+/* ---------------- figures ---------------- */
+.fig-frame{position:relative;padding:10px;background:var(--bg)}
+.fig-frame::before,.fig-frame::after,
+.fig-frame>.mk::before,.fig-frame>.mk::after{
+  content:"";position:absolute;width:12px;height:12px;border:0 solid var(--line-2);
+}
+.fig-frame::before{top:0;left:0;border-top-width:1px;border-left-width:1px}
+.fig-frame::after{top:0;right:0;border-top-width:1px;border-right-width:1px}
+.fig-frame>.mk::before{bottom:0;left:0;border-bottom-width:1px;border-left-width:1px}
+.fig-frame>.mk::after{bottom:0;right:0;border-bottom-width:1px;border-right-width:1px}
+.fig-frame img{background:var(--bg-3)}
+/* A press cutting shown at 269px is texture, not text. Wrapping the frame in a
+   button makes it open its own sheet at full detail. */
+.fig-open{
+  display:block;width:100%;padding:0;border:0;background:none;
+  cursor:zoom-in;text-align:left;color:inherit;font:inherit;
+}
+.fig-open .fig-frame{transition:background-color .18s ease}
+.fig-open:hover .fig-frame,.fig-open:focus-visible .fig-frame{background:var(--sig-3)}
+figcaption{
+  /* minmax(0,…), not 1fr: see the note on .end-links. A caption at 320px was
+     demanding 243px for a 217px column and hanging 25px off the page. */
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s4);
+  margin-top:var(--s3);padding-top:var(--s3);border-top:1px solid var(--line);
+  align-items:baseline;
+}
+figcaption p{font-size:13.5px;line-height:1.5;color:var(--ink-3)}
+.fig-id{color:var(--sig);white-space:nowrap}
+
+/* ---------------- platform entries ---------------- */
+.plat{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s5);
+  padding-bottom:var(--s9);margin-bottom:var(--s9);border-bottom:1px solid var(--line);
+}
+.plat:last-child{padding-bottom:0;margin-bottom:0;border-bottom:0}
+/* The featured system follows a .sys entry's bottom border. .plat has no
+   padding-top, so it sat flush against that hairline while carrying 96px
+   below — badly lopsided. Match the bottom so the block is evenly inset
+   from the rule above and the index table below. */
+.plat-feature{padding-top:var(--s9)}
+/* Experience leads the page: the roles table first, then the production system
+   from the current contract as the featured work. The table is capped to a
+   reading width — at 1300px a two-column table is mostly air — and the
+   feature is ruled off beneath it as a separate block. */
+.exp-roles{max-width:880px}
+/* The featured system's screenshots take the gutter column as well (1/8, not
+   1/7). With the usual split its text ran 167px past the two screenshots; this
+   brings it to 67px, in line with the platforms, and the dashboard — the most
+   important picture on the page — gets ~100px wider. Desktop only: below
+   1081px the standard responsive split applies. */
+@media (min-width:1081px){
+  .plat-feature .plat-fig{grid-column:1/8}
+}
+.exp-roles+.plat-feature{margin-top:var(--s7);padding-top:var(--s7);border-top:1px solid var(--line-2)}
+/* Stacked figures space themselves. Previously the second figure in a column
+   carried an inline margin, so any entry that gained a figure without one had
+   its plates flush against each other. */
+.plat-fig{grid-column:1/7;display:grid;gap:var(--s6);align-content:start}
+.plat-body{grid-column:8/13}
+/* wrap: the SYS-04 row carries a code, a class label and a "Production
+   deployment" badge, and .tag is white-space:nowrap, so at 320px the three
+   together could not shrink below 305px inside a 280px column and hung off
+   the page. They stack onto a second line instead. */
+.plat-code{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3);margin-bottom:var(--s4)}
+.plat-code b{
+  font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.12em;
+  background:var(--ink);color:var(--bg);padding:3px var(--s2);
+}
+.plat h3{font-size:clamp(21px,2.5vw,27px);font-weight:600;letter-spacing:-.024em;line-height:1.15}
+.plat-sub{margin-top:var(--s2);font-size:15px;color:var(--ink-3)}
+.plat p.desc{margin-top:var(--s4);font-size:15.5px;line-height:1.6;color:var(--ink-2)}
+
+/* leader-ruled spec rows */
+.spec{margin-top:var(--s5);border-top:1px solid var(--ink)}
+.spec>div{
+  display:grid;grid-template-columns:150px minmax(0,1fr);gap:var(--s4);
+  padding:9px 0;border-bottom:1px solid var(--line);
+}
+.spec dt{
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ink-3);padding-top:3px;
+}
+.spec dd{font-size:14.5px;line-height:1.5;color:var(--ink)}
+.spec dd .u{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.outcome{
+  margin-top:var(--s5);padding:var(--s4);
+  background:var(--sig-3);border-left:2px solid var(--sig);
+}
+.outcome p{font-size:14.5px;line-height:1.55;color:var(--ink);margin-top:var(--s2)}
+.sec.alt .outcome{background:var(--bg)}
+
+/* ---------------- systems ---------------- */
+.sys{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s5);
+  padding:var(--s7) 0;border-bottom:1px solid var(--line);
+}
+.sys:first-of-type{border-top:1px solid var(--line)}
+.sys-code{grid-column:1/2}
+.sys-main{grid-column:2/8}
+.sys-spec{grid-column:8/13}
+.sys h3{font-size:19px;font-weight:600;letter-spacing:-.017em;line-height:1.25;margin-bottom:var(--s3)}
+.sys p{font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.sys-meta{margin-top:var(--s4);display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4)}
+.sys-spec .spec{margin-top:0;border-top:0}
+.sys-spec .spec>div:first-child{padding-top:0}
+.link{
+  display:inline-block;margin-top:var(--s4);font-family:var(--mono);font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--sig);
+  border-bottom:1px solid var(--sig-3);padding-bottom:2px;transition:border-color .2s;
+}
+.link:hover{border-color:var(--sig)}
+
+/* ---------------- data tables ---------------- */
+.tbl{width:100%;border-collapse:collapse;margin-top:var(--s5)}
+.tbl caption{text-align:left;padding-bottom:var(--s3)}
+.tbl th{
+  text-align:left;font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
+  padding:0 var(--s4) var(--s3) 0;border-bottom:1px solid var(--ink);white-space:nowrap;
+}
+.tbl td{
+  padding:var(--s4) var(--s4) var(--s4) 0;border-bottom:1px solid var(--line);
+  font-size:14.5px;line-height:1.5;vertical-align:baseline;color:var(--ink-2);
+}
+.tbl td:first-child{
+  font-family:var(--mono);font-size:12px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;white-space:nowrap;width:1%;
+}
+.tbl td b{font-weight:600;color:var(--ink);font-size:15px}
+.tag{
+  display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
+  border:1px solid var(--line-2);padding:1px 6px;
+  white-space:nowrap;vertical-align:2px;
+}
+.tbl td .tag{margin-left:var(--s3)}
+.tag-award{color:var(--sig);border-color:var(--sig)}
+
+/* organisation marks — identification at a glance, deliberately small */
+.logo{display:block;width:36px;height:36px;flex:none}
+.logo img{width:36px;height:36px;object-fit:contain;background:var(--bg)}
+.tbl td.has-logo{display:flex;gap:var(--s3);align-items:flex-start}
+/* :not() matters — without it this rule also matches .logo-blank and stretches
+   the spacer, throwing that row's text out of alignment with the others. */
+.tbl td.has-logo>span:not(.logo-blank):not(.logo-stack){flex:1}
+/* Keeps a logo-less row aligned with the rows that have one. The height is
+   load-bearing, not cosmetic: table cells align on baselines, and a zero-height
+   first flex item gives the cell a different baseline from a 36px logo — which
+   dropped the whole row's text 14px below its neighbours. */
+.logo-blank{display:block;width:36px;height:36px;flex:none}
+/* two marks on one row stack, so every row's text starts at the same x */
+.logo-stack{display:flex;flex-direction:column;gap:4px;width:36px;flex:none}
+.plat-code .logo{width:28px;height:28px}
+.plat-code .logo img{width:28px;height:28px}
+/* a non-square mark keeps its ratio inside the square box */
+.logo img[height="45"]{object-fit:contain}
+.tbl td .rank{color:var(--sig);font-weight:600}
+.tbl tr:last-child td{border-bottom:0}
+.tbl a{color:var(--sig);text-decoration:none;border-bottom:1px solid var(--sig-3)}
+.tbl a:hover{border-color:var(--sig)}
+
+.tbl-scroll{overflow-x:auto}
+
+/* ---------------- deployment / press ---------------- */
+.dep{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s5)}
+.dep-body{grid-column:1/6}
+.dep-figs{grid-column:7/13;display:grid;grid-template-columns:1fr 1fr;gap:var(--s5)}
+/* dep-stack: table across the full width, photographs in a row beneath it.
+   Side by side, an 8-row table beside two stacked team photos left 428px of
+   empty column under the table, and the teaching table 242px. Stacked, the
+   table gets wide rows (fewer line breaks, so shorter) and the photographs
+   share one row with nothing left over. auto-fit picks the column count:
+   two photos become two wide plates, four become a strip. */
+.dep-stack .dep-body{grid-column:1/-1;max-width:880px}
+/* 880px, the same reading width as the Experience roles table: at full width
+   a three-column table of short rows ("2022 · Champion · AUST Rover
+   Challenge") was mostly air on the right. The photographs below keep the
+   full width. */
+.dep-stack .dep-figs{
+  grid-column:1/-1;margin-top:var(--s6);
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+}
+.dep p{font-size:15.5px;line-height:1.65;color:var(--ink-2)}
+.dep p+p{margin-top:var(--s4)}
+.dep p.first{font-size:19px;line-height:1.5;color:var(--ink);letter-spacing:-.014em}
+
+/* ---------------- certificates ---------------- */
+.certs{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s7) var(--s5);list-style:none}
+.cert a{display:block;text-decoration:none}
+.cert .fig-frame{padding:8px}
+.cert-shot{aspect-ratio:4/3;background:var(--bg-3);overflow:hidden}
+.cert-shot img{width:100%;height:100%;object-fit:contain;transition:transform .3s ease}
+.cert a:hover .cert-shot img{transform:scale(1.03)}
+.cert-meta{margin-top:var(--s3);padding-top:var(--s3);border-top:1px solid var(--line)}
+.cert-meta h3{margin-top:var(--s2);font-size:15px;font-weight:600;letter-spacing:-.014em;line-height:1.25}
+.cert a:hover h3{color:var(--sig)}
+.cert-meta p{margin-top:3px;font-size:13px;line-height:1.45;color:var(--ink-3)}
+.cert-meta .tag{margin-top:var(--s3)}
+/* ---------------- press gallery ---------------- */
+/* Was an index table with a "View cutting" button on every row, which meant
+   the evidence only existed behind a click. A press record whose cuttings are
+   invisible is a list of claims, so the plates come first and carry the index
+   information — outlet, subject, date — underneath. Every plate still opens
+   its full-size document, because a newspaper page at 399px is texture.
+   Same component shape as .certs: a boxed ratio with object-fit:contain, so a
+   document is always shown whole rather than cropped to fit the grid. */
+.press-wrap{margin-top:var(--s8);border-top:2px solid var(--ink);padding-top:var(--s5)}
+/* The gallery replaced a <table>, and the table's <caption> was carrying the
+   block's name — removing one without adding the other left nine plates with
+   no headline. The sibling blocks in this section are tables, so their names
+   are mono captions; a gallery has no caption element, so it takes a real
+   heading instead. Sized to outrank the mono captions without competing with
+   the <h2> above it. */
+.press-head{font-size:18px;font-weight:600;letter-spacing:-.018em;margin-bottom:var(--s3)}
+.press-note{font-size:15px;line-height:1.6;color:var(--ink-2);max-width:60ch}
+.press{
+  margin-top:var(--s6);list-style:none;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s7) var(--s5);
+}
+/* A real <a href="…-full.jpg">, not a <button>: sheets.js calls preventDefault()
+   and opens the dialog instead, so with JavaScript off every plate still opens
+   its document. Same contract as the certificate cards — keep the href. */
+.press-open{
+  display:block;width:100%;text-align:left;text-decoration:none;
+  background:none;border:0;padding:0;cursor:pointer;color:inherit;font:inherit;
+}
+.press-shot{aspect-ratio:4/3;background:var(--bg-3);overflow:hidden}
+.press-shot img{width:100%;height:100%;object-fit:contain;transition:transform .3s ease}
+.press-open .fig-frame{padding:8px;transition:background-color .18s ease}
+.press-open:hover .fig-frame,.press-open:focus-visible .fig-frame{background:var(--sig-3)}
+.press-open:hover .press-shot img{transform:scale(1.03)}
+.press-meta{margin-top:var(--s3);padding-top:var(--s3);border-top:1px solid var(--line)}
+.press-meta h4{margin-top:var(--s2);font-size:15px;font-weight:600;letter-spacing:-.014em;line-height:1.25}
+.press-open:hover .press-meta h4{color:var(--sig)}
+.press-meta p{margin-top:3px;font-size:13px;line-height:1.45;color:var(--ink-3)}
+.press-date{display:block;margin-top:var(--s3);color:var(--ink-3)}
+
+/* Courses sit under the certificate grid as a compact index, not as plates.
+   They are supporting evidence; the competition awards above are the claim. */
+.courses{margin-top:var(--s8);border-top:1px solid var(--line);padding-top:var(--s5)}
+.courses .tbl td:last-child{width:1%;white-space:nowrap}
+.courses .sheet-open{margin-top:0}
+
+/* ---------------- capability index ---------------- */
+.cap{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s7) var(--s8);align-items:start}
+.cap section{border-top:2px solid var(--ink);padding-top:var(--s4)}
+/* A real heading, not a mono micro-label: the group name has to outrank the
+   items under it or the groups stop reading as groups. */
+.cap h3{font-size:16px;font-weight:600;letter-spacing:-.016em;margin-bottom:var(--s4)}
+/* Same leader-ruled rows as the platform specs, so capability reads as an
+   index you can scan rather than a paragraph you have to parse. */
+.cap .spec{margin-top:0;border-top:0}
+.cap .spec>div{grid-template-columns:104px minmax(0,1fr)}
+.cap .spec>div:first-child{padding-top:0}
+.cap .spec dd{color:var(--ink-2)}
+
+/* ---------------- footer ---------------- */
+.end{border-top:2px solid var(--ink);padding:var(--s9) 0 var(--s7)}
+.end-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s5)}
+.end-main{grid-column:1/7}
+.portrait{width:128px;margin-bottom:var(--s5)}
+.end h2{font-size:clamp(24px,3.4vw,38px);font-weight:600;letter-spacing:-.03em;line-height:1.1;max-width:18ch}
+.end p{margin-top:var(--s4);font-size:16px;line-height:1.6;color:var(--ink-2);max-width:42ch}
+.end-links{grid-column:8/13;border-top:1px solid var(--line)}
+/* minmax(0,1fr), not 1fr: a 1fr track keeps min-width:auto, so the 26-character
+   email address — one unbreakable token — forced the track wider than its share
+   and shoved the arrow column 16px past the page edge, producing horizontal
+   scroll at every width where the sidebar is on. The address wraps instead. */
+.end-links a{
+  display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:var(--s4);align-items:baseline;
+  padding:var(--s4) 0;border-bottom:1px solid var(--line);
+  text-decoration:none;font-size:15px;color:var(--ink);transition:color .18s;
+}
+.end-links a:hover{color:var(--sig)}
+.end-links a span:last-child{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.end-links a span:nth-child(2){overflow-wrap:anywhere}
+.foot{
+  margin-top:var(--s8);padding-top:var(--s4);border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:var(--s5);flex-wrap:wrap;
+}
+
+/* ---------------- colour on text ---------------- */
+/* Section numbers carry the signal colour so the sheet reads as numbered plates. */
+.sec-head>.lbl:first-child{color:var(--sig)}
+
+/* Annotation highlight — a marker stroke under a load-bearing phrase.
+   Used sparingly: if everything is highlighted, nothing is. */
+.hl{
+  color:var(--sig);font-weight:500;
+  background-image:linear-gradient(transparent 60%,var(--sig-3) 60%);
+  padding:0 2px;
+}
+
+/* Data rows respond to the cursor, the way a spec sheet you can actually
+   read with your finger would. */
+.tbl tbody tr{transition:background-color .18s ease}
+.tbl tbody tr:hover{background:var(--sig-3)}
+.spec>div{transition:background-color .18s ease}
+.spec>div:hover{background:var(--bg-3)}
+.spec>div:hover dt{color:var(--sig)}
+.plat-code b{transition:background-color .18s ease}
+.plat:hover .plat-code b{background:var(--sig)}
+
+/* ---------------- domain colours ---------------- */
+/* Air, land, water. Anything tied to one platform carries data-domain, and the
+   colour follows it into small marks only: codes, the platform label, figure
+   IDs, a 2px rule, a 3px row marker. Never a fill behind text, never body copy.
+   The hero sentence introduces the key ("air, land and water" in the three
+   colours), so by the time a reader meets a teal row marker in the awards
+   table they already know it means the AUV. Indigo stays the interface colour:
+   links, buttons, navigation. */
+[data-domain="air"]{--dom:var(--air)}
+[data-domain="land"]{--dom:var(--land)}
+[data-domain="water"]{--dom:var(--water)}
+
+/* Colour and weight only. Three highlighter bands in one sentence read as a
+   school textbook; the colour alone carries the key. */
+.dom{color:var(--dom);font-weight:500}
+
+/* platforms */
+.plat[data-domain] .plat-code b,
+.plat[data-domain]:hover .plat-code b{background:var(--dom)}
+.plat[data-domain] .plat-code .lbl{color:var(--dom)}
+[data-domain] .fig-id{color:var(--dom)}
+.sys[data-domain] .sys-code .lbl{color:var(--dom)}
+
+/* Feni: an air operation, so the section rule and number take the air colour */
+.sec[data-domain] .sec-head{border-top-color:var(--dom);--rule:var(--dom)}
+.sec[data-domain] .sec-head>.lbl:first-child{color:var(--dom)}
+
+/* Table rows: the date takes the domain colour, nothing more. A 3px vertical
+   marker beside each row was tried and removed — it read as odd, not as a key. */
+.tbl tr[data-domain] td:first-child{color:var(--dom)}
+
+/* Certificates and press plates: the code takes the domain colour and names
+   the domain after it ("DOC-02 · Water"). A 2px coloured rule along the top of
+   each card was tried and removed; the cards keep their neutral hairline. */
+.cert[data-domain] .fig-id::after,
+.press-item[data-domain] .fig-id::after{color:var(--ink-3)}
+[data-domain="air"]:is(.cert,.press-item) .fig-id::after{content:"  \00B7  Air"}
+[data-domain="land"]:is(.cert,.press-item) .fig-id::after{content:"  \00B7  Land"}
+[data-domain="water"]:is(.cert,.press-item) .fig-id::after{content:"  \00B7  Water"}
+
+/* detail sheets */
+.sheet[data-domain] .sheet-head{border-bottom-color:var(--dom)}
+.sheet[data-domain] .sheet-code{background:var(--dom)}
+
+/* ---------------- detail sheets (native <dialog>) ---------------- */
+.sheet-open{
+  display:inline-block;margin-top:var(--s4);
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--sig);background:none;border:1px solid var(--sig-3);
+  padding:7px var(--s4);cursor:pointer;transition:background-color .18s,border-color .18s;
+}
+.sheet-open:hover{background:var(--sig-3);border-color:var(--sig)}
+.tbl td .sheet-open{margin-top:var(--s2);padding:4px var(--s3);font-size:10px}
+
+.sheet{
+  /* `*{margin:0}` at the top of this file wipes the UA stylesheet's
+     `margin:auto` on a modal dialog, which pins it to the top-left corner.
+     Restore it explicitly — this is what centres the sheet. */
+  margin:auto;
+  width:min(920px,calc(100vw - 2 * var(--s5)));
+  max-height:min(88vh,960px);
+  padding:0;border:1px solid var(--line-2);background:var(--bg);color:var(--ink);
+  box-shadow:var(--sheet-shadow);
+}
+.sheet::backdrop{
+  background:var(--backdrop);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+}
+.sheet-inner{display:flex;flex-direction:column;max-height:inherit}
+.sheet-head{
+  position:sticky;top:0;z-index:2;flex:none;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s5);
+  padding:var(--s5) var(--s6);background:var(--bg);border-bottom:2px solid var(--ink);
+}
+.sheet-code{
+  font-family:var(--mono);background:var(--ink);color:var(--bg);
+  padding:2px var(--s2);margin-right:var(--s2);letter-spacing:.12em;
+}
+.sheet-head h2{margin-top:var(--s3);font-size:clamp(19px,2.4vw,25px);font-weight:600;letter-spacing:-.022em;line-height:1.15}
+.sheet-meta{margin-top:var(--s2);font-size:14px;color:var(--ink-3)}
+.sheet-close{
+  flex:none;width:34px;height:34px;line-height:1;cursor:pointer;
+  background:none;border:1px solid var(--line-2);color:var(--ink-2);
+  font-size:15px;transition:background-color .18s,color .18s,border-color .18s;
+}
+.sheet-close:hover{background:var(--sig);border-color:var(--sig);color:var(--bg)}
+.sheet-body{overflow-y:auto;padding:var(--s6);display:grid;grid-template-columns:1fr 1fr;gap:var(--s6) var(--s7);align-items:start}
+/* A sheet with no gallery would otherwise leave the right column empty and
+   squeeze its prose into half the width. */
+.sheet-body:not(:has(.sheet-gallery)){grid-template-columns:1fr}
+.sheet-body:not(:has(.sheet-gallery)) .sheet-text{max-width:70ch}
+.sheet-gallery{display:grid;gap:var(--s5);align-content:start}
+/* Natural aspect ratio, flush to the frame. A max-height with object-fit:contain
+   was letterboxing every tall source against grey, so a gallery of mixed ratios
+   read as a ragged column of bars. The sheet body scrolls; tall is fine. */
+.sheet-fig img{background:var(--bg-3)}
+.sheet-fig figcaption{grid-template-columns:1fr}
+.sheet-fig figcaption p{font-size:13px}
+.sheet-text h3{margin-top:var(--s5)}
+.sheet-text h3:first-child{margin-top:0}
+.sheet-text p{margin-top:var(--s3);font-size:15px;line-height:1.65;color:var(--ink-2)}
+.sheet-list{margin-top:var(--s3);padding-left:0;list-style:none}
+.sheet-list li{
+  position:relative;padding-left:var(--s4);margin-top:var(--s2);
+  font-size:14.5px;line-height:1.6;color:var(--ink-2);
+}
+.sheet-list li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:1px;background:var(--sig)}
+.sheet-text .spec{margin-top:var(--s3)}
+.sheet-outcome{
+  margin-top:var(--s3);padding:var(--s4);
+  background:var(--sig-3);border-left:2px solid var(--sig);color:var(--ink);
+}
+/* Scroll lock driven purely by CSS: no reliance on the dialog `close` event,
+   which some builds do not dispatch. Degrades to a scrollable background. */
+/* certificate sheets — one document, shown whole */
+.sheet-body-doc{grid-template-columns:1fr}
+.sheet-doc-shot{background:var(--bg-3);padding:var(--s4);display:flex;justify-content:center}
+.sheet-doc-shot img{width:auto;max-width:100%;max-height:64vh;object-fit:contain}
+.sheet-doc-note{margin-top:var(--s4);display:flex;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;align-items:center}
+
+html:has(dialog.sheet[open]){overflow:hidden}
+
+@media (max-width:860px){
+  .sheet{width:calc(100vw - 2 * var(--s4));max-height:92vh}
+  .sheet-head{padding:var(--s4) var(--s5)}
+  /* Stacked: lead with the writing, then the plates. Five figures ahead of
+     the text would bury it. */
+  .sheet-body{grid-template-columns:1fr;padding:var(--s5);gap:var(--s6)}
+  .sheet-text{order:1}
+  .sheet-gallery{order:2}
+  .sheet-doc-shot img{max-height:52vh}
+}
+
+/* ================= MOTION ======================================
+   A small system, not a collection of effects. Everything shares --ease,
+   and everything is either a one-time arrival or a response to the cursor:
+   nothing loops, nothing is tied to scroll position, nothing blocks reading.
+   The longest wait anywhere is the hero, fully settled in ~1.2s.
+   prefers-reduced-motion (bottom of file) switches every piece of it off
+   and leaves the page in its final state.
+   ============================================================== */
+
+/* 1. Figures settle in as they enter the viewport. */
+:where(.js) .rise{opacity:0;transform:translateY(12px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+/* :where() keeps specificity at (0,1,0) so the reduced-motion reset below still wins.
+   Without the .js gate, a visitor with JS disabled would see no figures at all. */
+.rise.in{opacity:1;transform:none}
+
+@keyframes m-up{from{opacity:0;transform:translateY(14px)}}
+@keyframes m-focus{from{opacity:0;filter:blur(10px);transform:translateY(6px)}}
+@keyframes m-draw{from{transform:scaleX(0)}}
+@keyframes m-in-left{from{opacity:0;transform:translateX(-8px)}}
+@keyframes m-fade{from{opacity:0}}
+@keyframes m-sheet{from{opacity:0;transform:translateY(12px) scale(.985)}}
+
+/* 2. The hero arrives in reading order: label, name, sentence, contact,
+   title block; then the rule above the figures is plotted left to right and
+   the four figures land on it. The name comes into focus rather than sliding,
+   the one deliberately cinematic beat on the page. CSS only, so it plays
+   before the scripts have loaded. */
+.hero-eyebrow{animation:m-up .8s var(--ease) .05s both}
+.hero h1{animation:m-focus 1.1s var(--ease) .12s both}
+.hero-lede{animation:m-up .8s var(--ease) .3s both}
+.hero-reach{animation:m-up .8s var(--ease) .4s both}
+.tblock{animation:m-up .8s var(--ease) .5s both}
+/* The metrics border hands over to a pseudo-element so it can be drawn. */
+.metrics{position:relative;border-top-color:transparent}
+.metrics::before{
+  content:"";position:absolute;left:0;right:0;top:-2px;height:2px;background:var(--ink);
+  transform-origin:left;animation:m-draw 1.1s var(--ease) .55s both;
+}
+.metric{animation:m-up .7s var(--ease) both}
+.metric:nth-child(1){animation-delay:.75s}
+.metric:nth-child(2){animation-delay:.83s}
+.metric:nth-child(3){animation-delay:.91s}
+.metric:nth-child(4){animation-delay:.99s}
+
+/* 3. The section list in the rail steps in beside the hero. */
+.bar-nav a{animation:m-in-left .6s var(--ease) both}
+.bar-nav a:nth-child(1){animation-delay:.2s}
+.bar-nav a:nth-child(2){animation-delay:.24s}
+.bar-nav a:nth-child(3){animation-delay:.28s}
+.bar-nav a:nth-child(4){animation-delay:.32s}
+.bar-nav a:nth-child(5){animation-delay:.36s}
+.bar-nav a:nth-child(6){animation-delay:.4s}
+.bar-nav a:nth-child(7){animation-delay:.44s}
+.bar-nav a:nth-child(8){animation-delay:.48s}
+
+/* 4. Each section's heavy rule is plotted the same way when the section
+   arrives: the drawing motif carried down the page. Only the line moves;
+   the heading is never hidden. Gated on .js because main.js adds .in. */
+:where(.js) .sec-head{position:relative;border-top-color:transparent}
+:where(.js) .sec-head::before{
+  content:"";position:absolute;left:0;right:0;top:-2px;height:2px;
+  background:var(--rule,var(--ink));transform:scaleX(0);transform-origin:left;
+  transition:transform 1.2s var(--ease);
+}
+:where(.js) .sec-head.in::before{transform:none}
+:where(.js) .sec[data-domain] .sec-head{border-top-color:transparent}
+
+/* 5. Photographs lean in slightly under the cursor, inside a fixed frame so
+   the layout never moves. Documents (certificates, cuttings) keep their own
+   rule further up. */
+figure .fig-frame picture{display:block;overflow:hidden}
+figure .fig-frame img{transition:transform .9s var(--ease)}
+figure:hover .fig-frame img{transform:scale(1.03)}
+
+/* 6. Detail sheets rise into place over a fading backdrop. A keyframe on
+   [open] replays every time a sheet opens, with no script involved. */
+.sheet[open]{animation:m-sheet .45s var(--ease)}
+.sheet[open]::backdrop{animation:m-fade .35s ease}
+
+/* 7. Pressed buttons give a little. */
+.bar-cv:active,.sheet-open:active,.bar-theme:active{transform:translateY(1px)}
+
+/* 8. Switching theme cross-fades instead of snapping. theme.js adds
+   .theme-fade to <html> only for the length of the switch, so these
+   transitions never apply during normal use. */
+.theme-fade,.theme-fade *,.theme-fade *::before,.theme-fade *::after{
+  transition:background-color .4s ease,color .4s ease,border-color .4s ease,fill .4s ease !important;
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width:1080px){
+  .press{grid-template-columns:repeat(2,1fr)}
+  .plat-fig{grid-column:1/7}
+  .plat-body{grid-column:7/13}
+  .sys-main{grid-column:2/7}
+  .sys-spec{grid-column:7/13}
+}
+@media (max-width:860px){
+  .bar-nav{display:none}
+  /* name + CV + revision will not fit a phone bar. The CV is the action;
+     the revision stamp is decoration, so it is the one that goes. */
+  .bar-rev{display:none}
+  .bar-cv{font-size:10px;padding:6px var(--s2)}
+  .tblock{grid-template-columns:repeat(2,1fr)}
+  .metrics{grid-template-columns:repeat(2,1fr);gap:var(--s6) var(--s5)}
+  .sec{padding:var(--s8) 0}
+  .sec-head{grid-template-columns:56px minmax(0,1fr);row-gap:var(--s2);margin-bottom:var(--s7)}
+  .sec-head .sec-note{grid-column:1/3;text-align:left;justify-self:start;margin-top:var(--s2)}
+  .plat,.sys,.dep,.end-grid{grid-template-columns:minmax(0,1fr)}
+  .plat-fig,.plat-body,.sys-code,.sys-main,.sys-spec,
+  .dep-body,.dep-figs,.end-main,.end-links{grid-column:1/-1}
+  .plat{padding-bottom:var(--s7);margin-bottom:var(--s7)}
+  .sys-code{margin-bottom:var(--s2)}
+  .cap{grid-template-columns:1fr;gap:var(--s6)}
+  .cap .spec>div{grid-template-columns:96px minmax(0,1fr)}
+  .certs{grid-template-columns:repeat(2,1fr);gap:var(--s6) var(--s4)}
+  .press{grid-template-columns:repeat(2,1fr);gap:var(--s6) var(--s4)}
+  .end-links{margin-top:var(--s6)}
+}
+@media (max-width:700px){
+  /* Two cuttings side by side on a phone are unreadable even as plates. */
+  .press{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  /* The bar carries name + theme + CV on a phone and needs 406px of content in
+     a 375px viewport, so the theme label goes and the square speaks for itself.
+     Hidden visually, not from assistive tech — theme.js keeps an aria-label on
+     the button, and the text stays in the DOM so nothing depends on the class. */
+  .bar .wrap{gap:var(--s3)}
+  .bar-theme-txt{
+    position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+    overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;
+  }
+  .bar-theme-ico{width:11px;height:11px}
+  .spec>div{grid-template-columns:1fr;gap:2px;padding:var(--s3) 0}
+  .dep-figs{grid-template-columns:1fr}
+  .certs{grid-template-columns:repeat(2,1fr)}
+  .end-links a{grid-template-columns:minmax(0,1fr) auto}
+  .end-links a span:first-child{display:none}
+}
+/* ---------------- print ---------------- */
+/* Recruiters print portfolios and save them as PDF. Without this the left rail
+   prints as a 212px empty column down every page and the dark theme prints a
+   black background. Forced to the light palette regardless of the chosen theme:
+   a printer has no dark mode, only toner. */
+@media print{
+  :root,:root[data-theme="dark"]{
+    --bg:#fff; --bg-2:#fff; --bg-3:#f4f4f2;
+    --line:#ccc; --line-2:#999; --line-3:#000;
+    --ink:#000; --ink-2:#222; --ink-3:#555; --ink-4:#777;
+    --sig:#2b22b8; --sig-2:#2b22b8; --sig-3:#ececfa;
+    --air:#2B6C8E; --land:#895830; --water:#1A7465;
+    color-scheme:light;
+  }
+  @page{margin:16mm 14mm}
+  html,body{background:#fff}
+  body{padding-left:0 !important;font-size:11pt}
+  .bar,.skip,.bar-theme,dialog.sheet,.hero-reach .lbl,.hero-viz{display:none !important}
+  .sec{padding:var(--s7) 0;break-inside:auto}
+  .sec-head{break-after:avoid}
+  figure,.press-item,.cert,.plat,.sys{break-inside:avoid}
+  .hero{padding-top:0}
+  /* A printed page cannot be clicked, so the destination has to be on it. */
+  .end-links a::after{content:" (" attr(href) ")";font-size:9pt;color:#555}
+  .end-links a[href^="mailto:"]::after,.end-links a[href^="tel:"]::after{content:""}
+  .rise{opacity:1 !important;transform:none !important}
+  *,*::before,*::after{animation:none !important}
+  .sec-head::before{transform:none !important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rise{opacity:1;transform:none;transition:none}
+  /* every keyframe off, so each element sits in its final state */
+  *,*::before,*::after,::backdrop{animation:none !important}
+  .sec-head::before{transform:none !important}
+  figure:hover .fig-frame img{transform:none}
+  *{transition-duration:.01ms !important}
+}

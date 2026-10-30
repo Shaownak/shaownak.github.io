@@ -1,0 +1,19 @@
+# GitHub Pages build settings.
+#
+# Everything listed below stays in the repository but is NEVER published.
+# This matters for more than tidiness: _src/ and "n photos/" hold the
+# unredacted original of the Banglalink monitoring screenshot, which shows
+# identifiable employee faces and one employee's name and staff number.
+# The served copy in img/g/ is redacted by tools/build-images.py; these
+# sources must not be reachable over HTTP.
+#
+# Do NOT add a .nojekyll file — it disables this exclusion list.
+exclude:
+  - _src/
+  - "n photos/"
+  - Certificates/
+  - logos/
+  - tools/
+  - .claude/
+  - README.md
+  - _config.yml

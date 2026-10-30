@@ -1,0 +1,13 @@
+# https://shaownak.github.io/
+User-agent: *
+Allow: /
+
+# Originals of the published imagery, including an unredacted monitoring
+# screenshot. Excluded from the Jekyll build as well (_config.yml) — this is
+# the second lock, not the only one.
+Disallow: /_src/
+Disallow: /n%20photos/
+Disallow: /Certificates/
+Disallow: /logos/
+
+Sitemap: https://shaownak.github.io/sitemap.xml

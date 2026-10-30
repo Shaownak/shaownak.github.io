@@ -1,0 +1,13 @@
+# Originals. NEVER commit these: the repository is public, so anything
+# committed can be downloaded from GitHub even though _config.yml keeps it
+# off the website. _src/ and "n photos/" hold the unredacted Banglalink
+# monitoring screenshot (employee faces, a name and a staff number).
+_src/
+
+# Duplicated source dumps of the same originals
+n photos/
+Certificates/
+logos/
+
+# Local editor/tooling config
+.claude/
